@@ -1,7 +1,8 @@
 export const LOGIN_URL = '';
 export const LOGOUT_URL = '';
 export const PROFILE_URL = '';
-export const MOVIES_URL = '/movies';
+export const MEDICINE_URL = '/medicine';
+export const CART = '/cart';
 export const UNIVERSITY_URL = '';
 export const CHANGE_PASSWORD_URL = '';
 export const SETTINGS_URL = '';

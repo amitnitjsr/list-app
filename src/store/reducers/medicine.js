@@ -1,7 +1,7 @@
 import { setItemAction, resetItemAction } from '../../shared/commonUpdateState';
 const initialState = {
-    movies: null,
-    moviesList: [],
+    medicine: null,
+    medicineList: [],
     action: {
         type: null,
         isSuccess: false,
@@ -12,8 +12,8 @@ const initialState = {
 export default function (state = initialState, action) {
     const { type, payload } = action;
     switch (type) {
-        case 'SET_MOVIES_ACTION': return setItemAction(state, payload, 'MOVIES');
-        case 'RESET_MOVIES_ACTION': return resetItemAction(state, 'MOVIES');
+        case 'SET_MEDICINE_ACTION': return setItemAction(state, payload, 'MEDICINE');
+        case 'RESET_MEDICINE_ACTION': return resetItemAction(state, 'MEDICINE');
         default: return state
     }
 }

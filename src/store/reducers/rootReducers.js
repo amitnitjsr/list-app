@@ -2,10 +2,13 @@ import { combineReducers } from "redux";
 import auth from "./auth";
 import dashboard from './dashboard';
 import profile from "./profile";
-import movies from './movie';
+import medicine from './medicine';
+import cart from './cart';
+
 export default combineReducers({
     auth,
     dashboard,
     profile,
-    movies,
+    medicine,
+    cart,
 })

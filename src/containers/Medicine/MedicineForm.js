@@ -12,12 +12,12 @@ import {
 } from 'reactstrap';
 import InputUI from '../../UI/InputUI';
 import FileInput from "../../UI/FileInput";
-import { MOVIES_URL } from '../../shared/allApiUrl';
+import { MEDICINE_URL } from '../../shared/allApiUrl';
 import { crudAction } from '../../store/actions/common';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-function MovieForm(props) {
+function MedicineForm(props) {
   const initialFields = {
     name: "",
     category: "",
@@ -27,32 +27,31 @@ function MovieForm(props) {
     image: null,
   }
   const [fields, setFields] = useState(initialFields);
-  const [movieId, setmovieId] = useState(null);
+  const [medicineId, setmedicineId] = useState(null);
   const { handleSubmit, register, errors } = useForm();
   const params = props.match.params;
 
   useEffect(() => {
-    setmovieId(params.movieId)
-    if (params.movieId) {
-      props.crudActionCall(`${MOVIES_URL}/${params.movieId}`, null, "GET")
+    setmedicineId(params.medicineId)
+    if (params.medicineId) {
+      props.crudActionCall(`${MEDICINE_URL}/${params.medicineId}`, null, "GET")
     }
   }, [params]);
 
   useEffect(() => {
 
-    const action = props.movies.action;
+    const action = props.medicine.action;
 
-    if (props.movies.movies && params.movieId) {
-      setFields({ ...fields, ...props.movies.movies[0] });
+    if (props.medicine.medicine && params.medicineId) {
+      setFields({ ...fields, ...props.medicine.medicine[0] });
     }
     if (action.isSuccess && action.type === "ADD" || action.type === "UPDATE")
-      props.history.push("/movies/list")
+      props.history.push("/medicine/list")
 
-  }, [props.movies]);
+  }, [props.medicine]);
 
   const onSubmit = (data) => {
-    debugger
-    if (movieId) data.movieId = movieId;
+    if (medicineId) data.medicineId = medicineId;
     if (data.poster[0]) {
       var img = document.querySelector('img');  // $('img')[0]
       img.src = URL.createObjectURL(data.poster[0]); // set src to blob url
@@ -74,22 +73,22 @@ function MovieForm(props) {
     }
 
 
-    if (movieId) {
+    if (medicineId) {
       let tmp = data.genre;
       data.genre = tmp.split(',');
       data.modified_on = new Date();
       data.modified_by = ''
-      props.crudActionCall(MOVIES_URL + `/${movieId}`, data, movieId ? "UPDATE" : "ADD");
+      props.crudActionCall(MEDICINE_URL + `/${medicineId}`, data, medicineId ? "UPDATE" : "ADD");
     }
     else {
       let tmp = data.genre;
       data.genre = tmp.split(',');
       data.created_on = new Date();
       data.created_by = 'Admin'
-      props.crudActionCall(MOVIES_URL, data, movieId ? "UPDATE" : "ADD");
+      props.crudActionCall(MEDICINE_URL, data, medicineId ? "UPDATE" : "ADD");
     }
     props.resetAction();
-    // props.crudActionCall(MOVIES_URL, data, movieId ? "UPDATE" : "ADD")
+    // props.crudActionCall(MEDICINE_URL, data, medicineId ? "UPDATE" : "ADD")
   }
 
   const readURI = (e) => {
@@ -113,7 +112,7 @@ function MovieForm(props) {
         <Col xs="12">
           <Card>
             <CardHeader>
-              <i className="fa fa-edit"></i>{movieId ? `Movie Update` : `Movie Add`}
+              <i className="fa fa-edit"></i>{medicineId ? `Movie Update` : `Movie Add`}
             </CardHeader>
             <Form className="form-horizontal" onSubmit={handleSubmit(onSubmit)}>
               <CardBody>
@@ -192,15 +191,15 @@ function MovieForm(props) {
   );
 }
 const mapStateToProps = state => {
-  const { movies } = state;
+  const { medicine } = state;
   return {
-    movies
+    medicine
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    crudActionCall: (url, data, actionType) => dispatch(crudAction(url, data, actionType, "MOVIES")),
-    resetAction: () => dispatch({ type: "RESET_MOVIES_ACTION" })
+    crudActionCall: (url, data, actionType) => dispatch(crudAction(url, data, actionType, "MEDICINE")),
+    resetAction: () => dispatch({ type: "RESET_MEDICINE_ACTION" })
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MovieForm));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MedicineForm));
