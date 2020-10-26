@@ -16,6 +16,7 @@ import { MEDICINE_URL } from '../../shared/allApiUrl';
 import { crudAction } from '../../store/actions/common';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+var CryptoJS = require("crypto-js");
 
 function MedicineForm(props) {
   const initialFields = {
@@ -57,6 +58,7 @@ function MedicineForm(props) {
       img.src = URL.createObjectURL(data.poster[0]); // set src to blob url
       // this.setState({ uploadedImage: img.src })
       data.poster = img.src;
+
       console.log('data', img.src);
 
     }
@@ -68,6 +70,9 @@ function MedicineForm(props) {
       reader.onload = function (ev) {
         // this.setState({ imageURI: ev.target.result });
         console.log('imageURI', ev.target.result);
+
+
+
       }.bind(this);
       reader.readAsDataURL(data.poster[0]);
     }
@@ -95,14 +100,25 @@ function MedicineForm(props) {
     if (e.target.files && e.target.files[0]) {
       let reader = new FileReader();
       reader.onload = function (ev) {
-        console.log('url', ev.target.result)
-        this.setState({ imageURI: ev.target.result });
+        console.log('url', ev.target.result);
+        // Encrypt
+        var ciphertext = CryptoJS.AES.encrypt(ev.target.result, 'secret key 123').toString();
+        console.log('ciphertext', ciphertext)
+        // Decrypt
+        var bytes = CryptoJS.AES.decrypt(ciphertext, 'secret key 123');
+        console.log('CryptoJS', bytes)
+
+        var originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+        console.log(originalText); // 'my message'
+        // this.setState({ imageURI: ev.target.result });
       }.bind(this);
       reader.readAsDataURL(e.target.files[0]);
     }
   }
 
   const handleChange = (e) => {
+    console.log('handleChange')
     readURI(e); // maybe call this with webworker or async library?
   }
 
@@ -170,13 +186,14 @@ function MedicineForm(props) {
                   min="1"
                   max="10"
                 />
-                <FileInput
-                  label="Medicine Image"
+                <input
+                  label="Medicine Image..."
                   name="image"
-                  register={register}
-                  errors={errors}
-                  required={false}
-
+                  // register={register}
+                  // errors={errors}
+                  // required={false}
+                  onChange={(e) => handleChange(e)}
+                  type="file"
                 />
 
               </CardBody>
